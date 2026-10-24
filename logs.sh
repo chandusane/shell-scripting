@@ -18,17 +18,18 @@ if [ $user_id -ne 0 ]; then
 fi
 echo "script execution started at : $(date)+%f %d) )"
 validate(){
-    if ($1 -eq 0); then
-        echo "$2 .. installed successfully | tee -a $logs_file"
-    else
+    if ($1 -ne 0); then
         echo "$2 .. installation failed | tee -a $logs_file"
+    else
+        echo "$2 .. installed successfully | tee -a $logs_file"
     fi
 }
 mkdir -p $logs_folder
 dnf install nginx -y &>> logs_file
+systemctl restart nginx
 validate ($? "nginx")
 dnf install mysql -y &>> logs_file
 validate ($? "mysql")
-
+systemctl restart mysql
 echo "script executed successfully completed at : $(date)+%f %d) )"
 
